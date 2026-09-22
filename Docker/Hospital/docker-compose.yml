@@ -1,0 +1,14 @@
+name: hospital-mysql
+
+services: 
+  hospital-db:  
+    image: mysql 
+    container_name: hospitaldb  
+    environment:  
+      MYSQL_ROOT_PASSWORD: quevedo2dam
+      MYSQL_DATABASE: hospital
+      MYSQL_USER: quevedo
+      MYSQL_PASSWORD: 1234
+    ports:  
+      - "3306:3306"  
+  
