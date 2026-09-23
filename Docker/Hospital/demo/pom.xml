@@ -40,6 +40,7 @@
             <artifactId>HikariCP</artifactId>
             <version>${hicariCP.version}</version>
         </dependency>
+        <!--Gestor de dependencias-->
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
