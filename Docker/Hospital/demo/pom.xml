@@ -16,6 +16,7 @@
         <jakarta.version>11.0.0</jakarta.version>
         <hicariCP.version>7.1.0</hicariCP.version>
         <weld.version>7.0.0.CR1</weld.version>
+        <lombok.version>1.18.46</lombok.version>
 
 
     </properties>
@@ -45,6 +46,11 @@
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
             <version>${weld.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
 
 
