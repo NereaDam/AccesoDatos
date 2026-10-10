@@ -1,49 +1,82 @@
 package org.example.ui;
 
 import jakarta.inject.Inject;
-import org.example.dao.modelo.Usuario;
+import lombok.extern.slf4j.Slf4j;
+import org.example.domain.error.AppError;
 
-import java.util.Scanner;
-
-
+@Slf4j
 public class MainMenu {
 
-    private final UsuarioUi usuarioUi;
+    private static final int OPCION_LISTAR_PACIENTES = 1;
+    private static final int OPCION_AÑADIR_PACIENTE = 2;
+    private static final int OPCION_SALIR = 10;
+
+    private final UsuarioUI usuarioUi;
+    private final PacienteUI pacienteUi;
 
     @Inject
-    public MainMenu(UsuarioUi usuarioUi){
-        this.usuarioUi=usuarioUi;
+    public MainMenu(UsuarioUI usuarioUi, PacienteUI pacienteUi) {
+        this.usuarioUi = usuarioUi;
+        this.pacienteUi = pacienteUi;
     }
-
 
     public void run() {
         try {
-            boolean logueado=false;
-            Scanner read = new Scanner(System.in);
-            System.out.println("Hospital app");
-            System.out.println("Introduzca credenciales");
+            IO.println("=== Hospital App ===");
 
-            while (!logueado){
-                System.out.println("Usuario: ");
-                String username = read.nextLine().trim();
-                if (username.isEmpty()) continue;
+            usuarioUi.login();
 
-                System.out.println("Contraseña: ");
-                String password = read.nextLine().trim();
-                if (password.isEmpty()) continue;
+            int opcion;
+            do {
+                printMenu();
+                opcion = readOption();
 
-                Usuario credencialesUI = new Usuario(username,password);
+                switch (opcion) {
+                    case OPCION_LISTAR_PACIENTES:
+                        pacienteUi.getAll();
+                        break;
+                    case OPCION_AÑADIR_PACIENTE:
+                        pacienteUi.save();
+                        break;
+                    case OPCION_SALIR:
+                        IO.println("Hasta la vista.");
+                        break;
+                    default:
+                        if (opcion != -1) {
+                            IO.println("Opción no válida.");
+                        }
+                }
 
+            } while (opcion != OPCION_SALIR);
 
-                logueado = usuarioUi.login(credencialesUI);
+        } catch (AppError e) {
+            System.err.println("Fallo grave: " + e.getMessage());
+            log.error("Fallo grave {}", e.getMessage());
+            System.exit(1);
+        }
+    }
 
-            }
+    private void printMenu() {
+        IO.println("\n=== Menú principal ===");
+        IO.println(OPCION_LISTAR_PACIENTES + ". Mostrar todos los pacientes");
+        IO.println(OPCION_AÑADIR_PACIENTE + ". Añadir paciente");
+        IO.println(OPCION_SALIR + ". Salir");
+        IO.println("Introduzca una opción:");
+    }
 
+    private int readOption() {
+        String linea = IO.readln();
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (linea == null || linea.trim().isEmpty()) {
+            IO.println("Debe introducir una opción.");
+            return -1;
         }
 
-
+        try {
+            return Integer.parseInt(linea.trim());
+        } catch (NumberFormatException e) {
+            IO.println("Opción no válida. Debe introducir un número.");
+            return -1;
+        }
     }
 }

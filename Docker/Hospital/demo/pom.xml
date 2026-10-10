@@ -12,48 +12,64 @@
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mysql.version>8.0.33</mysql.version>
+        <!-- Definición de versiones de dependencias -->
         <jakarta.version>11.0.0</jakarta.version>
-        <hicariCP.version>7.1.0</hicariCP.version>
-        <weld.version>7.0.0.CR1</weld.version>
+        <weld.version>6.0.4.Final</weld.version>
         <lombok.version>1.18.46</lombok.version>
-
-
+        <mysql.version>8.0.33</mysql.version>
+        <hikari.version>7.1.0</hikari.version>
+        <log4j.version>2.26.1</log4j.version>
+        <slf4j.version>2.0.19</slf4j.version>
     </properties>
-
-
-
     <dependencies>
-        <!-- Base de Datos MySQL-->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
-        </dependency>
-
+        <!-- API de Jakarta EE -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
             <version>${jakarta.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>${hicariCP.version}</version>
-        </dependency>
-        <!--Gestor de dependencias-->
+        <!-- Inyección de dependencias con Weld -->
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>
             <version>${weld.version}</version>
         </dependency>
+        <!-- Lombok para generar código boilerplate -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
-
-
+        <!-- Base de datos mysql -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+        <!-- Pool de conexiones HikariCP -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${hikari.version}</version>
+        </dependency>
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
     </dependencies>
+
 
 </project>

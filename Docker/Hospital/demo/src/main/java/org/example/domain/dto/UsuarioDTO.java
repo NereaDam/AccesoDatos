@@ -1,15 +1,14 @@
-package org.example.dao.modelo;
+package org.example.domain.dto;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
+@Builder
 @Data
 @AllArgsConstructor
-public class Usuario {
-    //clase que se mapea con la base de datos
-
+public class UsuarioDTO {
     private String username;
     private String password;
-
 }
