@@ -2,6 +2,14 @@ package org.example.dao.repositories.jdbc;
 
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import org.example.common.Constantes;
+import org.example.dao.common.SQLQueries;
+import org.example.dao.mappers.PacienteRowMapper;
+import org.example.dao.model.Paciente;
+import org.example.dao.repositories.PacienteRepository;
+import org.example.dao.utils.DBConnection;
+import org.example.domain.error.DatabaseError;
+import org.example.domain.error.PacienteDuplicadoError;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,8 +22,7 @@ public class JDBCPacienteRepository implements PacienteRepository {
     private final PacienteRowMapper pacienteRowMapper;
 
     @Inject
-    public JDBCPacienteRepository(DBConnection dbConnection,
-                                  PacienteRowMapper pacienteRowMapper) {
+    public JDBCPacienteRepository(DBConnection dbConnection, PacienteRowMapper pacienteRowMapper) {
         this.dbConnection = dbConnection;
         this.pacienteRowMapper = pacienteRowMapper;
     }
@@ -23,9 +30,7 @@ public class JDBCPacienteRepository implements PacienteRepository {
     @Override
     public List<Paciente> findAll() {
         List<Paciente> pacientes = new ArrayList<>();
-        try (Connection conn = dbConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(SQLQueries.FIND_ALL_PACIENTES);
-             ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(SQLQueries.FIND_ALL_PACIENTES); ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
                 Paciente paciente = pacienteRowMapper.mapRow(rs, rs.getRow());
@@ -40,10 +45,7 @@ public class JDBCPacienteRepository implements PacienteRepository {
 
     @Override
     public Long add(Paciente paciente) {
-        try (Connection conn = dbConnection.getConnection();
-             PreparedStatement pstmtPaciente = conn.prepareStatement(SQLQueries.ADD_PACIENTE, Statement.RETURN_GENERATED_KEYS);
-             PreparedStatement pstmtUsuario = conn.prepareStatement(SQLQueries.ADD_USUARIO)
-        ) {
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement pstmtPaciente = conn.prepareStatement(SQLQueries.ADD_PACIENTE, Statement.RETURN_GENERATED_KEYS); PreparedStatement pstmtUsuario = conn.prepareStatement(SQLQueries.ADD_USUARIO)) {
             try {
                 conn.setAutoCommit(false);
                 pstmtPaciente.setString(1, paciente.getNombre());
@@ -80,4 +82,50 @@ public class JDBCPacienteRepository implements PacienteRepository {
             throw new DatabaseError(Constantes.DATABASE_ERROR);
         }
     }
+
+    @Override
+    public void update(Paciente paciente) {
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(SQLQueries.UPDATE_PACIENTE)) {
+
+            pstmt.setString(1, paciente.getNombre());
+
+            if (paciente.getFechaNacimiento() == null) {
+                pstmt.setNull(2, Types.DATE);
+            } else {
+                pstmt.setDate(2, Date.valueOf(paciente.getFechaNacimiento()));
+            }
+
+            pstmt.setString(3, paciente.getTelefono());
+            pstmt.setLong(4, paciente.getId());
+
+            int filas = pstmt.executeUpdate();
+
+            if (filas == 0) {
+                throw new DatabaseError("No existe ese paciente");
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseError(e.getMessage());
+        }
+    }
+
+
+    public void delete(Long id) {
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(SQLQueries.DELETE_PACIENTE)) {
+
+            pstmt.setLong(1, id);
+
+            int filas = pstmt.executeUpdate();
+
+            if (filas == 0) {
+                throw new DatabaseError("No existe ese paciente");
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseError(e.getMessage());
+        }
+    }
 }
+
+
+

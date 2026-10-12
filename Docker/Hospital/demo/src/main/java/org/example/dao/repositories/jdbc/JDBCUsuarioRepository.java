@@ -3,6 +3,9 @@ package org.example.dao.repositories.jdbc;
 import jakarta.inject.Inject;
 import org.example.dao.common.SQLQueries;
 import org.example.dao.model.Usuario;
+import org.example.dao.repositories.UsuarioRepository;
+import org.example.dao.utils.DBConnection;
+import org.example.domain.error.AppError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

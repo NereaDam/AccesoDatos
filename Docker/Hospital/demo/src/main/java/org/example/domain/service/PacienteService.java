@@ -25,5 +25,13 @@ public class PacienteService {
     public Long add(PacienteDTOAlta pacienteDTO) {
         return pacienteRepository.add(pacienteDTOMapper.toEntity(pacienteDTO));
     }
+
+    public void update(PacienteDTO dto) {
+        pacienteRepository.update(pacienteDTOMapper.toEntity(dto));
+    }
+
+    public void delete(Long id) {
+        pacienteRepository.delete(id);
+    }
 }
 

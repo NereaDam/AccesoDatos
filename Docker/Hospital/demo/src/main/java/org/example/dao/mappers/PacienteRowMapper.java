@@ -1,5 +1,7 @@
 package org.example.dao.mappers;
 
+import org.example.dao.model.Paciente;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

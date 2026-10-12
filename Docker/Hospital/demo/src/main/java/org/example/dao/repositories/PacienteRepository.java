@@ -5,6 +5,12 @@ import org.example.dao.model.Paciente;
 import java.util.List;
 
 public interface PacienteRepository {
+
     List<Paciente> findAll();
+
     Long add (Paciente paciente);
+
+    void update(Paciente paciente);
+
+    void delete(Long id);
 }
